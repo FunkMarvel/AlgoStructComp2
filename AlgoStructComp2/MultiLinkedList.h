@@ -75,8 +75,10 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
     //to check positive and negative index(if -1 then = 0)
     if (Index == size_ || Index == -Size_) Index = 0;
     {
+        Current_ = Head_;
+        Index = RolloverIndex(Index);
         
-    }
+    } 
 }
 
 
