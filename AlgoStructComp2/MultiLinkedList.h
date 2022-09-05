@@ -79,7 +79,7 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
         Append(NewElement);
         return;
     }
-    //to check positive and negative index(if -1 then = 0)
+   
     if (Index == Size_ || Index == -Size_) Index = 0;
     {
         CurrentNode_ = Head_;
@@ -88,7 +88,7 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
         {
             CurrentNode_ = CurrentNode_->NextNode;
         }
-
+       
         auto TempNode = CurrentNode_;
         CurrentNode_ = new Node<T>(NewElement);
         CurrentNode_ = CurrentNode_->NextNode = TempNode;
