@@ -119,6 +119,7 @@ template <typename T>
 int MultiLinkedList<T>::RolloverIndex(int Index) const
 {
         if (Index == 0) return 0;
+        if (Index < 0 && Index % Size_ == 0) return 0;
     //Index gets the reminder of size
         if (Index > 0) return (Index % Size_);
     //Returning the value of the absolute value of remainder of size (15/2 = 1)
