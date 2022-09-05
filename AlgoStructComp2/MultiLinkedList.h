@@ -108,6 +108,8 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
     CurrentNode_->PrevNode = TempNode->PrevNode;  // links new node to head-end of list.
     CurrentNode_->PrevNode->NextNode = CurrentNode_;  // links head-end of list to new node.
     TempNode->PrevNode = CurrentNode_;  // links tail-end of list to new node.
+    if(Index == 0) Head_ = CurrentNode_;
+    if(Index == Size_-1) Tail_ = CurrentNode_;
 
     CurrentNode_ = nullptr;
     Size_++;
@@ -115,11 +117,13 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
 
 template <typename T>
 void MultiLinkedList<T>::Remove() {
+    if (Head_ == nullptr) return;
     if (Size_ > 1) {
         auto TempNode = Tail_->PrevNode;
         delete Tail_;
         Tail_ = TempNode;
         Tail_->NextNode = Head_;
+        Head_->PrevNode = Tail_;
         Size_--;
         return;
     }
@@ -131,6 +135,7 @@ void MultiLinkedList<T>::Remove() {
 
 template <typename T>
 void MultiLinkedList<T>::Remove(int Index) {
+    if (Size_ <= 0) return;
     if (Index == Size_ || Index == -Size_) Index = 0;
     Index = RolloverIndex(Index);
     CurrentNode_ = Head_;
