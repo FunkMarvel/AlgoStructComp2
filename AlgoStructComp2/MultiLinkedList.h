@@ -7,6 +7,16 @@
 template<typename T>
 class MultiLinkedList
 {
+
+protected:
+    Node<T>* Head_{nullptr};
+    Node<T>* Tail_{nullptr};
+    // Node<T>* Child_[nullptr];
+    Node<T>* CurrentNode_{nullptr};
+    int Size_{};
+    
+    int RolloverIndex (int Index) const;
+    
 public:
     MultiLinkedList();
     //list of elements of type const T.
@@ -17,6 +27,17 @@ public:
 
     T& operator[](int Index);
 
+    friend std::ostream& operator<<(std::ostream& os, MultiLinkedList& SomeList)
+    {
+        for (int i = 0; i < SomeList.Size_-1; ++i)
+        {
+            os << CurrentNode_->Value << " ";
+            CurrentNode_ = CurrentNode_->NextNode;
+        }
+        os << CurrentNode_;
+        return os;
+    }
+
     void Append(T NewElement);
     void Insert(int Index,T NewElement);
     void Remove();
@@ -26,17 +47,6 @@ public:
     
     int GetSize() const;
     
-private:
-
-
-protected:
-    Node<T>* Head_{nullptr};
-    Node<T>* Tail_{nullptr};
-   // Node<T>* Child_[nullptr];
-    Node<T>* CurrentNode_{nullptr};
-    int Size_{};
-    
-    int RolloverIndex (int Index) const;
 };
 
 template <typename T>
