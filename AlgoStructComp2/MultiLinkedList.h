@@ -7,6 +7,16 @@
 template<typename T>
 class MultiLinkedList
 {
+
+protected:
+    Node<T>* Head_{nullptr};
+    Node<T>* Tail_{nullptr};
+    // Node<T>* Child_[nullptr];
+    Node<T>* CurrentNode_{nullptr};
+    int Size_{};
+    
+    int RolloverIndex (int Index) const;
+    
 public:
     MultiLinkedList();
     //list of elements of type const T.
@@ -17,6 +27,18 @@ public:
 
     T& operator[](int Index);
 
+    friend std::ostream& operator<<(std::ostream& os, MultiLinkedList& SomeList)
+    {
+        auto CurrentNode = SomeList.Head_;
+        for (int i = 0; i < SomeList.Size_; ++i)
+        {
+            os << CurrentNode->Value;
+            if (i != SomeList.Size_-1) os << " ";
+            CurrentNode = CurrentNode->NextNode;
+        }
+        return os;
+    }
+
     void Append(T NewElement);
     void Insert(int Index,T NewElement);
     void Remove();
@@ -24,17 +46,6 @@ public:
     
     int GetSize() const;
     
-private:
-
-
-protected:
-    Node<T>* Head_{nullptr};
-    Node<T>* Tail_{nullptr};
-   // Node<T>* Child_[nullptr];
-    Node<T>* CurrentNode_{nullptr};
-    int Size_{};
-    
-    int RolloverIndex (int Index) const;
 };
 
 template <typename T>
@@ -137,6 +148,7 @@ template <typename T>
 int MultiLinkedList<T>::RolloverIndex(int Index) const
 {
         if (Index == 0) return 0;
+        if (Index < 0 && Index % Size_ == 0) return 0;
     //Index gets the reminder of size
         if (Index > 0) return (Index % Size_);
     //Returning the value of the absolute value of remainder of size (15/2 = 1)
