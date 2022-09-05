@@ -54,16 +54,15 @@ void MultiLinkedList<T>::Append(T NewElement)
     {
         //Head and tail is both the head and tail since there is only 1 element inn the current linkedlist.
         Head_ = Tail_ = new Node<T>(NewElement);
-        //it's Pointing on itself
-        Head_->NextNode = Head_->PrevNode = Tail_;
-        Tail_->NextNode = Head_->PrevNode = Head_;
+        //it's Pointing to itself
+        Head_->NextNode = Head_->PrevNode = Tail_->NextNode = Tail_->PrevNode = Head_;
         Size_++;
         return;
     }
     //Telling the new node to point to the current tail.
     Tail_->NextNode = new Node<T>(NewElement);
     Tail_->NextNode->PrevNode = Tail_;
-    //Tail is now on the new Node created above.
+    //Tail is now on the new Node created above.Tail_ gets updated here.
     Tail_ = Tail_->NextNode;
     //new tail is poiting to head
     Tail_->NextNode = Head_;
@@ -119,14 +118,15 @@ MultiLinkedList<T>::MultiLinkedList(std::initializer_list<T> ArgList)
     //receives a argument that is used as size.
     Size_ = static_cast<int>(ArgList.size());
     //All three is now New node with the the same pointer to the beginning of the argument that got sent.
+    //Makes Head_,Tail_ and currentNode_ point to the beginning of the list of inputs.
     Head_ = Tail_ = CurrentNode_ = new Node<T>(*(ArgList.begin()));
     //This for loop connects all the elements
-    for (int I{}; I < Size_; ++I) {
-        //Changes the current next node into the new node that got created. Which is the one further back.
+    for (int I{1}; I < Size_; ++I) {
+        //Adds next input to the list. The new node will be the currentNodes next node.
         CurrentNode_->NextNode = new Node<T>(*(ArgList.begin() + I));
-        //tell the node infront that the new node is the new prev node.
+        //Makes the new node point back to the current node. 
         CurrentNode_->NextNode->PrevNode = CurrentNode_;
-        
+        //Moving the current node one forward. to make it ready for the next node that will get created.
         CurrentNode_ = CurrentNode_->NextNode;
     }
     //CurrentNode is now the lat element and therefor the tail.
