@@ -76,27 +76,29 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
 {
     if (Size_ < 1)
     {
+        // calls append if list is empty to add first element:
         Append(NewElement);
         return;
     }
     //to check positive and negative index(if -1 then = 0)
     if (Index == Size_ || Index == -Size_) Index = 0;
-    {
-        CurrentNode_ = Head_;
-        Index = RolloverIndex(Index);
-        for (int i{}; i < Index; i++)
-        {
-            CurrentNode_ = CurrentNode_->NextNode;
-        }
 
-        auto TempNode = CurrentNode_;
-        CurrentNode_ = new Node<T>(NewElement);
-        CurrentNode_ = CurrentNode_->NextNode = TempNode;
-        CurrentNode_->PrevNode = TempNode->PrevNode;
-        CurrentNode_->PrevNode->NextNode = CurrentNode_;
-        TempNode->PrevNode = CurrentNode_;
-        
-    } 
+    // sets CurrentNode to head to start iterating
+    CurrentNode_ = Head_;
+    
+    Index = RolloverIndex(Index);  // projects given Index into interval [0,Size_)
+    for (int i{}; i < Index; i++)
+    {
+        // moves currentNode until it points at element to insert new element infront of
+        CurrentNode_ = CurrentNode_->NextNode;
+    }
+
+    auto TempNode = CurrentNode_;  // creates temp refrence to CurrentNode.
+    CurrentNode_ = new Node<T>(NewElement);  // sets currentNode to be new node.
+    CurrentNode_ = CurrentNode_->NextNode = TempNode;  // links new node to tail-end of list
+    CurrentNode_->PrevNode = TempNode->PrevNode;  // links new node to head-end of list.
+    CurrentNode_->PrevNode->NextNode = CurrentNode_;  // links head-end of list to new node.
+    TempNode->PrevNode = CurrentNode_;  // links tail-end of list to new node.
 }
 
 template <typename T>
