@@ -21,8 +21,6 @@ public:
     void Insert(int Index,T NewElement);
     void Remove();
     void Remove(int Index);
-
-    void InsertEnd(T NewElement);
     
     int GetSize() const;
     
@@ -95,10 +93,41 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
 
     auto TempNode = CurrentNode_;  // creates temp refrence to CurrentNode.
     CurrentNode_ = new Node<T>(NewElement);  // sets currentNode to be new node.
-    CurrentNode_ = CurrentNode_->NextNode = TempNode;  // links new node to tail-end of list
+    CurrentNode_->NextNode = TempNode;  // links new node to tail-end of list
     CurrentNode_->PrevNode = TempNode->PrevNode;  // links new node to head-end of list.
     CurrentNode_->PrevNode->NextNode = CurrentNode_;  // links head-end of list to new node.
     TempNode->PrevNode = CurrentNode_;  // links tail-end of list to new node.
+
+    CurrentNode_ = nullptr;
+    Size_++;
+}
+
+template <typename T>
+void MultiLinkedList<T>::Remove() {
+    if (Size_ > 1) {
+        auto TempNode = Tail_->PrevNode;
+        delete Tail_;
+        Tail_ = TempNode;
+        Tail_->NextNode = Head_;
+        Size_--;
+        return;
+    }
+
+    delete Head_;
+    Head_ = Tail_ = CurrentNode_ = nullptr;
+    Size_ = 0;
+}
+
+template <typename T>
+void MultiLinkedList<T>::Remove(int Index) {
+    if (Index == Size_ || Index == -Size_) Index = 0;
+    Index = RolloverIndex(Index);
+    CurrentNode_ = Head_;
+    for (int I{}; I < Index; ++I)
+        CurrentNode_ = CurrentNode_->NextNode;
+    auto TempNode = CurrentNode_->NextNode->NextNode;
+    delete CurrentNode_->NextNode;
+    CurrentNode_->NextNode = TempNode;
 }
 
 template <typename T>
