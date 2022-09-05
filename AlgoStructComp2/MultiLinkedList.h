@@ -29,12 +29,13 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, MultiLinkedList& SomeList)
     {
-        for (int i = 0; i < SomeList.Size_-1; ++i)
+        auto CurrentNode = SomeList.Head_;
+        for (int i = 0; i < SomeList.Size_; ++i)
         {
-            os << CurrentNode_->Value << " ";
-            CurrentNode_ = CurrentNode_->NextNode;
+            os << CurrentNode->Value;
+            if (i != SomeList.Size_-1) os << " ";
+            CurrentNode = CurrentNode->NextNode;
         }
-        os << CurrentNode_;
         return os;
     }
 
