@@ -18,11 +18,18 @@ public:
     ~QuadLinkedList();
 };
 
+/**
+ * \brief Construct empty list.
+ */
 template <typename T>
 QuadLinkedList<T>::QuadLinkedList()
 {
 }
 
+/**
+ * \brief Construct list with single node.
+ * \param NewValue Data to store in initial node.
+ */
 template <typename T>
 QuadLinkedList<T>::QuadLinkedList(T NewValue)
 {
@@ -31,6 +38,9 @@ QuadLinkedList<T>::QuadLinkedList(T NewValue)
     Size_++;
 }
 
+/**
+ * \brief Delete all nodes and free data.
+ */
 template <typename T>
 QuadLinkedList<T>::~QuadLinkedList()
 {
