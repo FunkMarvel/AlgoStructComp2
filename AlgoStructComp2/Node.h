@@ -2,8 +2,10 @@
 
 template <typename T>
 struct Node {
-    Node* NextNode{nullptr};
-    Node* PrevNode{nullptr};
+    Node* RightNode{nullptr};
+    Node* LeftNode{nullptr};
+    Node* UpNode{nullptr};
+    Node* DownNode{nullptr};
     T Value{};
 
     Node();
