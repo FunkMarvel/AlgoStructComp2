@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include "Node.h"
 
+/**
+ * \brief Quadruple linked list
+ * \tparam T Data type of elements
+ */
 template <typename T>
 class QuadLinkedList
 {
