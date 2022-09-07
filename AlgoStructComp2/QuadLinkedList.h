@@ -16,6 +16,9 @@ public:
     QuadLinkedList();
     explicit QuadLinkedList(T NewValue);
     ~QuadLinkedList();
+    
+    Node<T>* GetHead();
+    Node<T>* GetUp(Node<T> Current);
 };
 
 /**
@@ -43,4 +46,16 @@ QuadLinkedList<T>::QuadLinkedList(T NewValue)
 template <typename T>
 QuadLinkedList<T>::~QuadLinkedList()
 {
+}
+
+template <typename T>
+Node<T>* QuadLinkedList<T>::GetHead()
+{
+    return Head;
+}
+
+template <typename T>
+Node<T>* QuadLinkedList<T>::GetUp(Node<T> Current)
+{
+    return CurrentNode.UpNode;
 }
