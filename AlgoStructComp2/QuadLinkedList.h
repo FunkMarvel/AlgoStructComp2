@@ -16,6 +16,8 @@ public:
     QuadLinkedList();
     explicit QuadLinkedList(T NewValue);
     ~QuadLinkedList();
+
+    Node<T>* TraverseList();
 };
 
 /**
@@ -43,4 +45,17 @@ QuadLinkedList<T>::QuadLinkedList(T NewValue)
 template <typename T>
 QuadLinkedList<T>::~QuadLinkedList()
 {
+}
+
+template <typename T>
+Node<T>* QuadLinkedList<T>::TraverseList()
+{
+    for (int i = 0; i < Size_; ++i)
+    {
+        for (int i = 0; i < MAX; ++i)
+        {
+        CurrentNode = Head;
+        CurrentNode.RightNode = Head->RightNode;
+        }
+    }
 }
