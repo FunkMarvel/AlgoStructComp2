@@ -34,7 +34,6 @@ template <typename T>
 QuadLinkedList<T>::QuadLinkedList(T NewValue)
 {
     Head = Tail = CurrentNode = new Node<T>(NewValue);
-    
     Size_++;
 }
 
