@@ -19,6 +19,8 @@ public:
     
     Node<T>* GetHead();
     Node<T>* GetUp(Node<T> Current);
+    
+    Node<T>* TraverseList();
 };
 
 /**
@@ -49,6 +51,7 @@ QuadLinkedList<T>::~QuadLinkedList()
 }
 
 template <typename T>
+
 Node<T>* QuadLinkedList<T>::GetHead()
 {
     return Head;
@@ -58,4 +61,17 @@ template <typename T>
 Node<T>* QuadLinkedList<T>::GetUp(Node<T> Current)
 {
     return CurrentNode.UpNode;
+}
+
+template <typename T>
+Node<T>* QuadLinkedList<T>::TraverseList()
+{
+    for (int i = 0; i < Size_; ++i)
+    {
+        for (int i = 0; i < Size_; ++i)
+        {
+        CurrentNode = Head;
+        CurrentNode.RightNode = Head->RightNode;
+        }
+    }
 }
