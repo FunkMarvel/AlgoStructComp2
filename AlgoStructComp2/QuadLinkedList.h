@@ -19,6 +19,10 @@ public:
     
     Node<T>* GetHead();
     Node<T>* GetUp(Node<T> Current);
+
+    // Add Nodes:
+    void AddNode(Node<T>& Current, Direction SideToAddAt, T ValueToAdd);
+    void MoveInDirection(Node<T> Current, Direction SideToMoveTo);
     
     Node<T>* TraverseList();
 };
@@ -61,6 +65,63 @@ template <typename T>
 Node<T>* QuadLinkedList<T>::GetUp(Node<T> Current)
 {
     return CurrentNode.UpNode;
+}
+
+template <typename T>
+void QuadLinkedList<T>::AddNode(Node<T>& Current, Direction SideToAddAt, T ValueToAdd)
+{
+    Node<T>* NewNode{nullptr};
+    switch (SideToAddAt)
+    {
+    case Left:
+        NewNode = Current.GetLeft();
+        if(NewNode) return;
+        NewNode = new Node<T>(ValueToAdd);
+        Current.LeftNode = NewNode;
+        NewNode->RightNode = Current;
+        break;
+    case Right:
+        NewNode = Current.GetRight();
+        if(NewNode) return;
+        NewNode = new Node<T>(ValueToAdd);
+        Current.RightNode = NewNode;
+        NewNode->LeftNode = Current;
+        break;
+    case Up:
+        NewNode = Current.GetUp();
+        if(NewNode) return;
+        NewNode = new Node<T>(ValueToAdd);
+        Current.UpNode = NewNode;
+        NewNode->DownNode = Current;
+        break;
+    case Down:
+        NewNode = Current.GetDown();
+        if(NewNode) return;
+        NewNode = new Node<T>(ValueToAdd);
+        Current.DownNode = NewNode;
+        NewNode->UpNode = Current;
+        break;
+    }
+}
+
+template <typename T>
+void QuadLinkedList<T>::MoveInDirection(Node<T> Current, Direction SideToMoveTo)
+{
+    switch (SideToMoveTo)
+    {
+    case Left:
+        Current = Current.GetLeft();
+        break;
+    case Right:
+        Current = Current.GetRight();
+        break;
+    case Up:
+        Current = Current.GetUp();
+        break;
+    case Down:
+        Current = Current.GetDown();
+        break;
+    }
 }
 
 template <typename T>

@@ -30,3 +30,11 @@ template <typename T>
 Node<T>::Node(T NewValue) {
     Value = NewValue;
 }
+
+enum Direction
+{
+    Left,
+    Right,
+    Up,
+    Down
+};
