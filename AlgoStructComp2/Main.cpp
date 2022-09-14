@@ -1,17 +1,14 @@
 
-#include "Node.h"
-
-#include "iostream"
-#include "MultiLinkedList.h"
+#include <iostream>
+#include "QuadLinkedList.h"
 
 
 int main(int argc, char* argv[])
 {
-    
-
-
-
-
+    QuadLinkedList<int> quadlist{1};
+    std::cout << quadlist << std::endl;
+    quadlist.AddNode(2, Left);
+    std::cout << quadlist.MoveInDirection(Left);
     return 0;
 }
 
