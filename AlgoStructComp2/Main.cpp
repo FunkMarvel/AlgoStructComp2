@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
     std::cout << quadlist << std::endl;
     quadlist.AddNode(2, Left);
     std::cout << quadlist.MoveInDirection(Left);
+    quadlist.AddNode(3, Down);
     return 0;
 }
 

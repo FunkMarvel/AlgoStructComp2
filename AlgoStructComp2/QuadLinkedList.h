@@ -66,7 +66,8 @@ QuadLinkedList<T>::QuadLinkedList(T NewValue)
 template <typename T>
 QuadLinkedList<T>::~QuadLinkedList()
 {
-
+    while (Size_ > 0)
+        RemoveCurrentNode();
 }
 
 template <typename T>
@@ -104,7 +105,60 @@ void QuadLinkedList<T>::AddNode(T ValueToAdd, Direction SideToAddAt)
 template <typename T>
 T QuadLinkedList<T>::RemoveCurrentNode()
 {
-    auto tempNode = CurrentNode_;
+    if (Size_ <= 0) throw std::runtime_error("Cannot remove from empty list.");
+    // if (Size_ <= 1)
+    // {
+    //     auto ReturnValue = Head_->Value;
+    //     delete Head_;
+    //     Size_--;
+    //     return ReturnValue;
+    // }
+    
+    auto NodeToRemove = CurrentNode_;
+
+    CurrentNode_ = nullptr;
+    
+    if (NodeToRemove->LeftNode && NodeToRemove->RightNode)
+    {
+        NodeToRemove->LeftNode->RightNode = NodeToRemove->RightNode;
+        NodeToRemove->RightNode->LeftNode = NodeToRemove->LeftNode;
+        CurrentNode_ = NodeToRemove->LeftNode;
+    }
+    else if (NodeToRemove->LeftNode)
+    {
+        NodeToRemove->LeftNode->RightNode = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->LeftNode;
+    }
+    else if (NodeToRemove->RightNode)
+    {
+        NodeToRemove->RightNode->LeftNode = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->RightNode;
+    }
+
+    if (NodeToRemove->UpNode && NodeToRemove->DownNode)
+    {
+        NodeToRemove->UpNode->DownNode = NodeToRemove->DownNode;
+        NodeToRemove->DownNode->UpNode = NodeToRemove->UpNode;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->UpNode;
+    }
+    else if (NodeToRemove->UpNode)
+    {
+        NodeToRemove->UpNode->DownNode = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->UpNode;
+    }
+    else if (NodeToRemove->DownNode)
+    {
+        NodeToRemove->DownNode->UpNode = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->DownNode;
+    }
+    
+    if (Head_ == NodeToRemove) Head_ = CurrentNode_;
+
+    auto ReturnValue = NodeToRemove->Value;
+    delete NodeToRemove;
+    Size_--;
+    
+    return ReturnValue;
 }
 
 template <typename T>
