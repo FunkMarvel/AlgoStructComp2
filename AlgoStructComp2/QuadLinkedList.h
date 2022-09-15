@@ -14,23 +14,19 @@
 template <typename T>
 class QuadLinkedList
 {
-
-    Node<T>* Head_{nullptr};
-    // Node<T>* Tail{nullptr};
-    Node<T>* CurrentNode_{nullptr};
+    Node::Node<T>* Head_{nullptr};
+    // Node::Node<T>* Tail{nullptr};
+    Node::Node<T>* CurrentNode_{nullptr};
     
     size_t Size_{};
 
     int Index;
     std::vector<std::list<T>> AdjList; // P-Array containing adjacency lists
-    
-
-
 public:
     QuadLinkedList();
     explicit QuadLinkedList(T NewValue);
     ~QuadLinkedList();
-
+    
   
     void SizeForArray(int Index);
     void AddEdge(int v,int w);
@@ -43,18 +39,18 @@ public:
     {
         os << SomeList.GetCurrent();
         return os;
-    } 
+    }
 
     // Add and remove Nodes:
-    void AddNode(T ValueToAdd, Direction SideToAddAt);
+    void AddNode(T ValueToAdd, Node::Direction SideToAddAt);
     T RemoveCurrentNode();
 
     // traverse list:
     T& MoveToHead();
-    T& MoveInDirection(Direction DirectionToMoveIn);
-    T& MoveInDirection(Direction DirectionToMoveIn, size_t NumberOfSteps);
-    
-    // Node<T>* TraverseList();
+    T& MoveInDirection(Node::Direction DirectionToMoveIn);
+    T& MoveInDirection(Node::Direction DirectionToMoveIn, size_t NumberOfSteps);
+
+    // Node::Node<T>* TraverseList();
 };
 
 /**
@@ -72,7 +68,7 @@ QuadLinkedList<T>::QuadLinkedList()
 template <typename T>
 QuadLinkedList<T>::QuadLinkedList(T NewValue)
 {
-    Head_ = CurrentNode_ = new Node<T>(NewValue);
+    Head_ = CurrentNode_ = new Node::Node<T>(NewValue);
     Size_++;
 
     
@@ -88,7 +84,13 @@ QuadLinkedList<T>::~QuadLinkedList()
         RemoveCurrentNode();
 }
 
+/**
+ * \brief Add node to given side of current node, if side is free.
+ * \param ValueToAdd Value to store in node.
+ * \param SideToAddAt Enum representing side to add at.
+ */
 template <typename T>
+
 void QuadLinkedList<T>::SizeForArray(int Index)
 {
     this->Index = Index;
@@ -125,93 +127,65 @@ void QuadLinkedList<T>::BreathFirstSearch(int s)
 }
 
 template <typename T>
-void QuadLinkedList<T>::AddNode(T ValueToAdd, Direction SideToAddAt)
+void QuadLinkedList<T>::AddNode(T ValueToAdd, Node::Direction SideToAddAt)
 {
-    if (Size_ <= 0) {Head_ = CurrentNode_ = new Node<T>(ValueToAdd); Size_++;}
-    
-    Node<T>* NewNode{nullptr};
+    if (Size_ <= 0)
+    {
+        Head_ = CurrentNode_ = new Node::Node<T>(ValueToAdd);
+        Size_++;
+    }
+
+    Node::Direction ReturnSide{};
     switch (SideToAddAt)
     {
-    case Left:
-        if (CurrentNode_->LeftNode) return;
-        NewNode = CurrentNode_->LeftNode = new Node<T>(ValueToAdd);
-        NewNode->RightNode = CurrentNode_;
+    case Node::Link1:
+        ReturnSide = Node::Link3;
         break;
-    case Right:
-        if (CurrentNode_->RightNode) return;
-        NewNode = CurrentNode_->RightNode = new Node<T>(ValueToAdd);
-        NewNode->LeftNode = CurrentNode_;
+    case Node::Link2:
+        ReturnSide =Node::Link4;
         break;
-    case Up:
-        if (CurrentNode_->UpNode) return;
-        NewNode = CurrentNode_->UpNode = new Node<T>(ValueToAdd);
-        NewNode->DownNode = CurrentNode_;
+    case Node::Link3:
+        ReturnSide = Node::Link1;
         break;
-    case Down:
-        if (CurrentNode_->DownNode) return;
-        NewNode = CurrentNode_->DownNode = new Node<T>(ValueToAdd);
-        NewNode->UpNode = CurrentNode_;
+    case Node::Link4:
+        ReturnSide = Node::Link2;
         break;
     }
+
+    Node::Node<T>* NewNode{nullptr};
+    NewNode = CurrentNode_->GetLink(SideToAddAt);
+    if (NewNode) return;
+
+    NewNode = new Node::Node<T>(ValueToAdd);
+    CurrentNode_->GetLink(SideToAddAt) = NewNode;
+    NewNode->GetLink(ReturnSide) = CurrentNode_;
+    
+    ++CurrentNode_->NumberOfLinks;
+    ++NewNode->NumberOfLinks;
+
     Size_++;
 }
 
+/**
+ * \brief Function for removing the current node. Can currently cause memory leaks.
+ * \return Value of removed node.
+ */
 template <typename T>
 T QuadLinkedList<T>::RemoveCurrentNode()
 {
     if (Size_ <= 0) throw std::runtime_error("Cannot remove from empty list.");
-    // if (Size_ <= 1)
-    // {
-    //     auto ReturnValue = Head_->Value;
-    //     delete Head_;
-    //     Size_--;
-    //     return ReturnValue;
-    // }
-    
+
     auto NodeToRemove = CurrentNode_;
 
     CurrentNode_ = nullptr;
-    
-    if (NodeToRemove->LeftNode && NodeToRemove->RightNode)
-    {
-        NodeToRemove->LeftNode->RightNode = NodeToRemove->RightNode;
-        NodeToRemove->RightNode->LeftNode = NodeToRemove->LeftNode;
-        CurrentNode_ = NodeToRemove->LeftNode;
-    }
-    else if (NodeToRemove->LeftNode)
-    {
-        NodeToRemove->LeftNode->RightNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->LeftNode;
-    }
-    else if (NodeToRemove->RightNode)
-    {
-        NodeToRemove->RightNode->LeftNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->RightNode;
-    }
+    if (NodeToRemove->NumberOfLinks > 2) return NULL;
 
-    if (NodeToRemove->UpNode && NodeToRemove->DownNode)
-    {
-        NodeToRemove->UpNode->DownNode = NodeToRemove->DownNode;
-        NodeToRemove->DownNode->UpNode = NodeToRemove->UpNode;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->UpNode;
-    }
-    else if (NodeToRemove->UpNode)
-    {
-        NodeToRemove->UpNode->DownNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->UpNode;
-    }
-    else if (NodeToRemove->DownNode)
-    {
-        NodeToRemove->DownNode->UpNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->DownNode;
-    }
-    
     if (Head_ == NodeToRemove) Head_ = CurrentNode_;
 
     auto ReturnValue = NodeToRemove->Value;
     delete NodeToRemove;
     Size_--;
-    
+
     return ReturnValue;
 }
 
@@ -223,32 +197,18 @@ T& QuadLinkedList<T>::MoveToHead()
 }
 
 template <typename T>
-T& QuadLinkedList<T>::MoveInDirection(Direction DirectionToMoveIn)
+T& QuadLinkedList<T>::MoveInDirection(Node::Direction DirectionToMoveIn)
 {
-    Node<T>* NewNode{nullptr};
-    switch (DirectionToMoveIn)
-    {
-    case Left:
-        NewNode = CurrentNode_->LeftNode;
-        break;
-    case Right:
-        NewNode = CurrentNode_->RightNode;
-        break;
-    case Up:
-        NewNode = CurrentNode_->UpNode;
-        break;
-    case Down:
-        NewNode = CurrentNode_->DownNode;
-        break;
-    }
-    if(NewNode) CurrentNode_ = NewNode;
+    Node::Node<T>* NewNode{nullptr};
+    NewNode = CurrentNode_->GetLink(DirectionToMoveIn);
+    if (NewNode) CurrentNode_ = NewNode;
     return CurrentNode_->Value;
 }
 
 template <typename T>
-T& QuadLinkedList<T>::MoveInDirection(Direction DirectionToMoveIn, size_t NumberOfSteps)
+T& QuadLinkedList<T>::MoveInDirection(Node::Direction DirectionToMoveIn, size_t NumberOfSteps)
 {
-    Node<T> PrevNode{nullptr};
+    Node::Node<T> PrevNode{nullptr};
     for (int i = 0; i < NumberOfSteps; ++i)
     {
         PrevNode = CurrentNode_;
@@ -259,7 +219,7 @@ T& QuadLinkedList<T>::MoveInDirection(Direction DirectionToMoveIn, size_t Number
 }
 
 // template <typename T>
-// Node<T>* QuadLinkedList<T>::TraverseList()
+// Node::Node<T>* QuadLinkedList<T>::TraverseList()
 // {
 //     for (int i = 0; i < Size_; ++i)
 //     {
