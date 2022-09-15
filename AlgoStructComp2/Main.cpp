@@ -7,9 +7,9 @@ int main(int argc, char* argv[])
 {
     QuadLinkedList<int> quadlist{1};
     std::cout << quadlist << std::endl;
-    quadlist.AddNode(2, Link1);
-    std::cout << quadlist.MoveInDirection(Link1);
-    quadlist.AddNode(3, Link4);
+    quadlist.AddNode(2, Node::Link1);
+    std::cout << quadlist.MoveInDirection(Node::Link1);
+    quadlist.AddNode(3, Node::Link4);
     return 0;
 }
 
