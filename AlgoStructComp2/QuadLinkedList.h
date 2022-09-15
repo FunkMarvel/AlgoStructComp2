@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <list>
 #include <ostream>
 #include <vector>
 
@@ -8,14 +9,19 @@
  * \brief Quadruple linked list
  * \tparam T Data type of elements
  */
+
+
 template <typename T>
 class QuadLinkedList
 {
     Node::Node<T>* Head_{nullptr};
     // Node::Node<T>* Tail{nullptr};
     Node::Node<T>* CurrentNode_{nullptr};
+    
     size_t Size_{};
 
+    int Index;
+    std::vector<std::list<T>> AdjList; // P-Array containing adjacency lists
 public:
     QuadLinkedList();
     explicit QuadLinkedList(T NewValue);
@@ -41,6 +47,12 @@ public:
         }
         return Node::NaL;
     }
+    
+  
+    void SizeForArray(int Index);
+    void AddEdge(int v,int w);
+    void BreathFirstSearch(int s);
+    
 
     friend std::ostream& operator<<(std::ostream& os, QuadLinkedList& SomeList)
     {
@@ -77,6 +89,8 @@ QuadLinkedList<T>::QuadLinkedList(T NewValue)
 {
     Head_ = CurrentNode_ = new Node::Node<T>(NewValue);
     Size_++;
+
+    
 }
 
 /**
@@ -94,6 +108,43 @@ QuadLinkedList<T>::~QuadLinkedList()
  * \param ValueToAdd Value to store in node.
  * \param SideToAddAt Enum representing side to add at.
  */
+template <typename T>
+
+void QuadLinkedList<T>::SizeForArray(int Index)
+{
+    this->Index = Index;
+    AdjList.resize(Index);
+}
+
+
+template <typename T>
+void QuadLinkedList<T>::BreathFirstSearch(int s)
+{
+    
+   std::vector<bool> VisitedNodes;
+    VisitedNodes.resize(Index,false);
+
+    std::list<T> queue;
+
+    VisitedNodes[s] = true;
+    queue.push_back(s);
+    
+    while (!queue.empty())
+    {
+       s = queue.front();
+        std::cout << s << " ";
+        queue.pop_front();
+        for (auto adjecent: AdjList[s])
+        {
+            if (!VisitedNodes[adjecent])
+            {
+                VisitedNodes[adjecent] = true;
+                queue.push_back(adjecent);
+            }
+        }
+    }
+}
+
 template <typename T>
 void QuadLinkedList<T>::AddNode(T ValueToAdd, Node::Direction SideToAddAt)
 {
