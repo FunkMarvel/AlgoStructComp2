@@ -3,10 +3,11 @@
 namespace Node
 {
     /**
- * \brief Enum representing possible sides of node.
- */
+    * \brief Enum representing possible sides of node.
+    */
     enum Direction
     {
+        NaL,
         Link1,
         Link2,
         Link3,
@@ -16,7 +17,7 @@ namespace Node
 
     template <typename T>
     class Node {
-
+        Node* NaP{nullptr};
         Node* Pointer1{nullptr};
         Node* Pointer2{nullptr};
         Node* Pointer3{nullptr};
@@ -38,8 +39,23 @@ namespace Node
                 return Pointer3;
             case Link4:
                 return Pointer4;
+            default:
+                return NaP;
             }
-            return nullptr;
+        }
+
+        Direction GetDirection(Node<T>* SomeNode)
+        {
+            if (SomeNode == Pointer1) return Link1;
+            if (SomeNode == Pointer2) return Link2;
+            if (SomeNode == Pointer3) return Link3;
+            if (SomeNode == Pointer4) return Link4;
+            return NaL;
+        }
+
+        Node<T>*& GetLink(Node<T>* SomeNode)
+        {
+            return GetLink(GetDirection(SomeNode));
         }
     
         Node();
