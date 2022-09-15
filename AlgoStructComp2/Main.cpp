@@ -2,14 +2,24 @@
 #include <iostream>
 #include "QuadLinkedList.h"
 
+using namespace std;
+
+
 
 int main(int argc, char* argv[])
 {
-    QuadLinkedList<int> quadlist{1};
-    std::cout << quadlist << std::endl;
-    quadlist.AddNode(2, Left);
-    std::cout << quadlist.MoveInDirection(Left);
-    quadlist.AddNode(3, Down);
+    // QuadLinkedList<int> quadlist{1};
+    // std::cout << quadlist << std::endl;
+    // quadlist.AddNode(2, Left);
+    // std::cout << quadlist.MoveInDirection(Left);
+    // quadlist.AddNode(3, Down);
+
+   
+ 
+    cout << "Following is Breadth First Traversal "
+         << "(starting from vertex 2) \n";
+    g.BreathFirstSearch(2);
+    
     return 0;
 }
 
