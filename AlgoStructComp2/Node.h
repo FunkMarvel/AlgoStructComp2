@@ -3,10 +3,10 @@
 template <typename T>
 struct Node {
 
-    Node* RightNode{nullptr};
-    Node* LeftNode{nullptr};
-    Node* UpNode{nullptr};
-    Node* DownNode{nullptr};
+    Node* Link1{nullptr};
+    Node* Link2{nullptr};
+    Node* Link3{nullptr};
+    Node* Link4{nullptr};
     T Value{};
     
     Node();
@@ -23,10 +23,13 @@ Node<T>::Node(T NewValue) {
     Value = NewValue;
 }
 
+/**
+ * \brief Enum representing possible sides of node.
+ */
 enum Direction
 {
-    Left,
-    Right,
-    Up,
-    Down
+    Link1,
+    Link2,
+    Link3,
+    Link4
 };

@@ -70,6 +70,11 @@ QuadLinkedList<T>::~QuadLinkedList()
         RemoveCurrentNode();
 }
 
+/**
+ * \brief Add node to given side of current node, if side is free.
+ * \param ValueToAdd Value to store in node.
+ * \param SideToAddAt Enum representing side to add at.
+ */
 template <typename T>
 void QuadLinkedList<T>::AddNode(T ValueToAdd, Direction SideToAddAt)
 {
@@ -78,78 +83,75 @@ void QuadLinkedList<T>::AddNode(T ValueToAdd, Direction SideToAddAt)
     Node<T>* NewNode{nullptr};
     switch (SideToAddAt)
     {
-    case Left:
-        if (CurrentNode_->LeftNode) return;
-        NewNode = CurrentNode_->LeftNode = new Node<T>(ValueToAdd);
-        NewNode->RightNode = CurrentNode_;
+    case Link1:
+        if (CurrentNode_->Link2) return;
+        NewNode = CurrentNode_->Link2 = new Node<T>(ValueToAdd);
+        NewNode->Link1 = CurrentNode_;
         break;
-    case Right:
-        if (CurrentNode_->RightNode) return;
-        NewNode = CurrentNode_->RightNode = new Node<T>(ValueToAdd);
-        NewNode->LeftNode = CurrentNode_;
+    case Link2:
+        if (CurrentNode_->Link1) return;
+        NewNode = CurrentNode_->Link1 = new Node<T>(ValueToAdd);
+        NewNode->Link2 = CurrentNode_;
         break;
-    case Up:
-        if (CurrentNode_->UpNode) return;
-        NewNode = CurrentNode_->UpNode = new Node<T>(ValueToAdd);
-        NewNode->DownNode = CurrentNode_;
+    case Link3:
+        if (CurrentNode_->Link3) return;
+        NewNode = CurrentNode_->Link3 = new Node<T>(ValueToAdd);
+        NewNode->Link4 = CurrentNode_;
         break;
-    case Down:
-        if (CurrentNode_->DownNode) return;
-        NewNode = CurrentNode_->DownNode = new Node<T>(ValueToAdd);
-        NewNode->UpNode = CurrentNode_;
+    case Link4:
+        if (CurrentNode_->Link4) return;
+        NewNode = CurrentNode_->Link4 = new Node<T>(ValueToAdd);
+        NewNode->Link3 = CurrentNode_;
         break;
     }
     Size_++;
 }
 
+/**
+ * \brief Function for removing the current node. Can currently cause memory leaks.
+ * \return Value of removed node.
+ */
 template <typename T>
 T QuadLinkedList<T>::RemoveCurrentNode()
 {
     if (Size_ <= 0) throw std::runtime_error("Cannot remove from empty list.");
-    // if (Size_ <= 1)
-    // {
-    //     auto ReturnValue = Head_->Value;
-    //     delete Head_;
-    //     Size_--;
-    //     return ReturnValue;
-    // }
     
     auto NodeToRemove = CurrentNode_;
 
     CurrentNode_ = nullptr;
     
-    if (NodeToRemove->LeftNode && NodeToRemove->RightNode)
+    if (NodeToRemove->Link2 && NodeToRemove->Link1)
     {
-        NodeToRemove->LeftNode->RightNode = NodeToRemove->RightNode;
-        NodeToRemove->RightNode->LeftNode = NodeToRemove->LeftNode;
-        CurrentNode_ = NodeToRemove->LeftNode;
+        NodeToRemove->Link2->Link1 = NodeToRemove->Link1;
+        NodeToRemove->Link1->Link2 = NodeToRemove->Link2;
+        CurrentNode_ = NodeToRemove->Link2;
     }
-    else if (NodeToRemove->LeftNode)
+    else if (NodeToRemove->Link2)
     {
-        NodeToRemove->LeftNode->RightNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->LeftNode;
+        NodeToRemove->Link2->Link1 = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->Link2;
     }
-    else if (NodeToRemove->RightNode)
+    else if (NodeToRemove->Link1)
     {
-        NodeToRemove->RightNode->LeftNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->RightNode;
+        NodeToRemove->Link1->Link2 = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->Link1;
     }
 
-    if (NodeToRemove->UpNode && NodeToRemove->DownNode)
+    if (NodeToRemove->Link3 && NodeToRemove->Link4)
     {
-        NodeToRemove->UpNode->DownNode = NodeToRemove->DownNode;
-        NodeToRemove->DownNode->UpNode = NodeToRemove->UpNode;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->UpNode;
+        NodeToRemove->Link3->Link4 = NodeToRemove->Link4;
+        NodeToRemove->Link4->Link3 = NodeToRemove->Link3;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->Link3;
     }
-    else if (NodeToRemove->UpNode)
+    else if (NodeToRemove->Link3)
     {
-        NodeToRemove->UpNode->DownNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->UpNode;
+        NodeToRemove->Link3->Link4 = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->Link3;
     }
-    else if (NodeToRemove->DownNode)
+    else if (NodeToRemove->Link4)
     {
-        NodeToRemove->DownNode->UpNode = nullptr;
-        if(!CurrentNode_) CurrentNode_ = NodeToRemove->DownNode;
+        NodeToRemove->Link4->Link3 = nullptr;
+        if(!CurrentNode_) CurrentNode_ = NodeToRemove->Link4;
     }
     
     if (Head_ == NodeToRemove) Head_ = CurrentNode_;
@@ -174,17 +176,17 @@ T& QuadLinkedList<T>::MoveInDirection(Direction DirectionToMoveIn)
     Node<T>* NewNode{nullptr};
     switch (DirectionToMoveIn)
     {
-    case Left:
-        NewNode = CurrentNode_->LeftNode;
+    case Link1:
+        NewNode = CurrentNode_->Link2;
         break;
-    case Right:
-        NewNode = CurrentNode_->RightNode;
+    case Link2:
+        NewNode = CurrentNode_->Link1;
         break;
-    case Up:
-        NewNode = CurrentNode_->UpNode;
+    case Link3:
+        NewNode = CurrentNode_->Link3;
         break;
-    case Down:
-        NewNode = CurrentNode_->DownNode;
+    case Link4:
+        NewNode = CurrentNode_->Link4;
         break;
     }
     if(NewNode) CurrentNode_ = NewNode;
