@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <ostream>
+#include <vector>
 
 #include "Node.h"
 
@@ -22,6 +23,24 @@ public:
 
     T& GetHead() { return Head_->Value; }
     T& GetCurrent() { return CurrentNode_->Value; }
+
+    static Node::Direction GetOpposingDirection(Node::Direction Side)
+    {
+        switch (Side)
+        {
+        case Node::Link1:
+            return Node::Link3;
+        case Node::Link2:
+            return Node::Link4;
+        case Node::Link3:
+            return Node::Link1;
+        case Node::Link4:
+            return Node::Link2;
+        case Node::NaL:
+            return Node::NaL;
+        }
+        return Node::NaL;
+    }
 
     friend std::ostream& operator<<(std::ostream& os, QuadLinkedList& SomeList)
     {
@@ -84,30 +103,13 @@ void QuadLinkedList<T>::AddNode(T ValueToAdd, Node::Direction SideToAddAt)
         Size_++;
     }
 
-    Node::Direction ReturnSide{};
-    switch (SideToAddAt)
-    {
-    case Node::Link1:
-        ReturnSide = Node::Link3;
-        break;
-    case Node::Link2:
-        ReturnSide =Node::Link4;
-        break;
-    case Node::Link3:
-        ReturnSide = Node::Link1;
-        break;
-    case Node::Link4:
-        ReturnSide = Node::Link2;
-        break;
-    }
-
     Node::Node<T>* NewNode{nullptr};
     NewNode = CurrentNode_->GetLink(SideToAddAt);
     if (NewNode) return;
 
     NewNode = new Node::Node<T>(ValueToAdd);
     CurrentNode_->GetLink(SideToAddAt) = NewNode;
-    NewNode->GetLink(ReturnSide) = CurrentNode_;
+    NewNode->GetLink(GetOpposingDirection(SideToAddAt)) = CurrentNode_;
     
     ++CurrentNode_->NumberOfLinks;
     ++NewNode->NumberOfLinks;
@@ -127,8 +129,35 @@ T QuadLinkedList<T>::RemoveCurrentNode()
     auto NodeToRemove = CurrentNode_;
 
     CurrentNode_ = nullptr;
-    if (NodeToRemove->NumberOfLinks > 2) return NULL;
+    if (NodeToRemove->NumberOfLinks > 2) throw std::runtime_error("Removing node may cause memory leak.");
 
+    if (NodeToRemove->NumberOfLinks < 2)
+    {
+        for (int i = Node::Link1; i <= Node::Link4; ++i)
+        {
+            auto currentLink = static_cast<Node::Direction>(i);
+            if(!NodeToRemove->GetLink(currentLink)) continue;
+            CurrentNode_ = NodeToRemove->GetLink(currentLink);
+            CurrentNode_->GetLink(NodeToRemove) = nullptr;
+            --CurrentNode_->NumberOfLinks;
+        }
+    }
+    else
+    {
+        std::vector<Node::Node<T>*> NodesToLink{};
+        NodesToLink.reserve(2);
+        for (int i = Node::Link1; i <= Node::Link4; ++i)
+        {
+            auto currentLink = static_cast<Node::Direction>(i);
+            if (!NodeToRemove->GetLink(currentLink)) continue;
+            NodesToLink.push_back(NodeToRemove->GetLink(currentLink));
+        }
+
+        NodesToLink[0]->GetLink(NodeToRemove) = NodesToLink[1];
+        NodesToLink[1]->GetLink(NodeToRemove) = NodesToLink[0];
+        CurrentNode_ = NodesToLink[0];
+    }
+    
     if (Head_ == NodeToRemove) Head_ = CurrentNode_;
 
     auto ReturnValue = NodeToRemove->Value;
