@@ -2,6 +2,9 @@
 
 #include <cmath>
 #include <initializer_list>
+#include <ostream>
+
+#include "Node.h"
 
 
 template<typename T>
@@ -103,7 +106,7 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
     }
 
     auto TempNode = CurrentNode_;  // creates temp refrence to CurrentNode.
-    CurrentNode_ = new Node<T>(NewElement);  // sets currentNode to be new node.
+    CurrentNode_ = new Node::Node<T>(NewElement);  // sets currentNode to be new node.
     CurrentNode_->NextNode = TempNode;  // links new node to tail-end of list
     CurrentNode_->PrevNode = TempNode->PrevNode;  // links new node to head-end of list.
     CurrentNode_->PrevNode->NextNode = CurrentNode_;  // links head-end of list to new node.
