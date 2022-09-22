@@ -120,7 +120,6 @@ void QuadLinkedList<T>::SizeForArray(int Index)
 template <typename T>
 void QuadLinkedList<T>::BreathFirstSearch(int s)
 {
-    
    std::vector<bool> VisitedNodes;
     VisitedNodes.resize(Index,false);
 
@@ -156,7 +155,7 @@ void QuadLinkedList<T>::AddNode(T ValueToAdd, Node::Direction SideToAddAt)
 
     Node::Node<T>* NewNode{nullptr};
     NewNode = CurrentNode_->GetLink(SideToAddAt);
-    if (NewNode) return;
+    if (NewNode) throw std::runtime_error("Cannot add node to occupied side");
 
     NewNode = new Node::Node<T>(ValueToAdd);
     CurrentNode_->GetLink(SideToAddAt) = NewNode;

@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <exception>
 #include "QuadLinkedList.h"
 
 using namespace std;
@@ -12,8 +13,18 @@ int main(int argc, char* argv[])
     QuadLinkedList<int> quadlist{1};
     std::cout << quadlist << std::endl;
     quadlist.AddNode(2, Node::Link1);
-    std::cout << quadlist.MoveInDirection(Node::Link1);
+    std::cout << quadlist.MoveInDirection(Node::Link1) << std::endl;
     quadlist.AddNode(3, Node::Link4);
+    std::cout << quadlist.MoveInDirection(Node::Link4) << std::endl;
+    std::cout << quadlist.MoveInDirection(Node::Link2)<< std::endl;
+    try
+    {
+        quadlist.AddNode(11, Node::Link4);
+    }
+    catch (const runtime_error& error)
+    {
+        cout << error.what();
+    }
 
     return 0;
 }
