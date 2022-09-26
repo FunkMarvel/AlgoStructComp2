@@ -12,10 +12,10 @@ class MultiLinkedList
 {
 
 protected:
-    Node<T>* Head_{nullptr};
-    Node<T>* Tail_{nullptr};
+    Task1<T>* Head_{nullptr};
+    Task1<T>* Tail_{nullptr};
     // Node<T>* Child_[nullptr];
-    Node<T>* CurrentNode_{nullptr};
+    Task1<T>* CurrentNode_{nullptr};
     int Size_{};
     
     int RolloverIndex (int Index) const;
@@ -54,7 +54,7 @@ public:
 template <typename T>
 MultiLinkedList<T>::MultiLinkedList()
 {
-   Head_ = Tail_ = CurrentNode_ = new Node<T>();
+   Head_ = Tail_ = CurrentNode_ = new Task1<T>();
     Size_ = 1 ;
      
 }
@@ -65,14 +65,14 @@ void MultiLinkedList<T>::Append(T NewElement)
     if (Size_ < 1)
     {
         //Head and tail is both the head and tail since there is only 1 element inn the current linkedlist.
-        Head_ = Tail_ = new Node<T>(NewElement);
+        Head_ = Tail_ = new Task1<T>(NewElement);
         //it's Pointing to itself
         Head_->NextNode = Head_->PrevNode = Tail_->NextNode = Tail_->PrevNode = Head_;
         Size_++;
         return;
     }
     //Telling the new node to point to the current tail.
-    Tail_->NextNode = new Node<T>(NewElement);
+    Tail_->NextNode = new Task1<T>(NewElement);
     Tail_->NextNode->PrevNode = Tail_;
     //Tail is now on the new Node created above.Tail_ gets updated here.
     Tail_ = Tail_->NextNode;
@@ -106,7 +106,7 @@ void MultiLinkedList<T>::Insert(int Index, T NewElement)
     }
 
     auto TempNode = CurrentNode_;  // creates temp refrence to CurrentNode.
-    CurrentNode_ = new Node::Node<T>(NewElement);  // sets currentNode to be new node.
+    CurrentNode_ = new Task1::Node<T>(NewElement);  // sets currentNode to be new node.
     CurrentNode_->NextNode = TempNode;  // links new node to tail-end of list
     CurrentNode_->PrevNode = TempNode->PrevNode;  // links new node to head-end of list.
     CurrentNode_->PrevNode->NextNode = CurrentNode_;  // links head-end of list to new node.
@@ -170,11 +170,11 @@ MultiLinkedList<T>::MultiLinkedList(std::initializer_list<T> ArgList)
     Size_ = static_cast<int>(ArgList.size());
     //All three is now New node with the the same pointer to the beginning of the argument that got sent.
     //Makes Head_,Tail_ and currentNode_ point to the beginning of the list of inputs.
-    Head_ = Tail_ = CurrentNode_ = new Node<T>(*(ArgList.begin()));
+    Head_ = Tail_ = CurrentNode_ = new Task1<T>(*(ArgList.begin()));
     //This for loop connects all the elements
     for (int I{1}; I < Size_; ++I) {
         //Adds next input to the list. The new node will be the currentNodes next node.
-        CurrentNode_->NextNode = new Node<T>(*(ArgList.begin() + I));
+        CurrentNode_->NextNode = new Task1<T>(*(ArgList.begin() + I));
         //Makes the new node point back to the current node. 
         CurrentNode_->NextNode->PrevNode = CurrentNode_;
         //Moving the current node one forward. to make it ready for the next node that will get created.

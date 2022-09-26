@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-namespace Node
+namespace Task1
 {
     /**
     * \brief Enum representing possible sides of node.
